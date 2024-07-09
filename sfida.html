@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bottone che si Sposta</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        button {
+            position: absolute;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s;
+           
+        }
+        a{
+            text-decoration: none;
+            color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button id="movableButton"><a href="./index.html" target="_blank">Cliccami se riesci!</a></button>
+    </div>
+
+    <script>
+        const button = document.getElementById('movableButton');
+        const container = document.querySelector('.container');
+
+        container.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+            const buttonRect = button.getBoundingClientRect();
+            const buttonX = buttonRect.left + buttonRect.width / 2;
+            const buttonY = buttonRect.top + buttonRect.height / 2;
+
+            const distanceX = buttonX - mouseX;
+            const distanceY = buttonY - mouseY;
+            const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+
+            if (distance < 200) { // Distanza entro la quale il bottone si sposta
+                const angle = Math.atan2(distanceY, distanceX);
+                const moveX = Math.cos(angle) * 50;
+                const moveY = Math.sin(angle) * 50;
+                let newX = button.offsetLeft + moveX;
+                let newY = button.offsetTop + moveY;
+
+                // Evita che il bottone esca dal container
+                newX = Math.max(0, Math.min(container.clientWidth - buttonRect.width, newX));
+                newY = Math.max(0, Math.min(container.clientHeight - buttonRect.height, newY));
+
+                button.style.left = newX + 'px';
+                button.style.top = newY + 'px';
+            }
+        });
+    </script>
+</body>
+</html>
